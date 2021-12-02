@@ -26,7 +26,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    @DisplayName("custom querydsl 확인")
+    @DisplayName("JQPL 확인")
     public void createItemTest() {
         //given
         createItem();
