@@ -2,6 +2,7 @@ package com.example.jpa2.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Table(name = "orders")
 @Getter
 @Setter
+@ToString
 public class Order {
 
     @Id
