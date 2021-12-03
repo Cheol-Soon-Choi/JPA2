@@ -1,8 +1,6 @@
 package com.example.jpa2.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -10,6 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Member {
 
     @Id
@@ -20,5 +19,11 @@ public class Member {
     private Integer age;
 
     private String name;
+
+    @Builder
+    public Member(int age, String name) {
+        this.age = age;
+        this.name = name;
+    }
 
 }
