@@ -25,6 +25,9 @@ public class OrderTest {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
     @PersistenceContext
     EntityManager em;
 
@@ -92,11 +95,7 @@ public class OrderTest {
         em.flush();
     }
 
-    @Test
-    @DisplayName("고아 객체 제거 테스트")
-    //Order에서 Order_item 삭제
-    public void orphanRemovalTest() {
-
+    public Order createOrder() {
         Order order = new Order();
         for (int i = 0; i < 3; i++) {
             Item item = createItem();
@@ -113,11 +112,36 @@ public class OrderTest {
 
         orderRepository.save(order);
 
+        return order;
+    }
+
+    @Test
+    @DisplayName("고아 객체 제거 테스트")
+    //Order에서 Order_item 삭제
+    public void orphanRemovalTest() {
+
+        Order order = createOrder();
+
         System.out.println("----------------flush-------------------");
         order.getOrderItems().remove(0);
         em.flush();
 
         Order savedOrder = orderRepository.findById(order.getId()).orElseThrow(EntityNotFoundException::new);
         assertThat(savedOrder.getOrderItems().size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("지연 로딩 테스트")
+    public void lazyLoadingTest() {
+
+        Order order = createOrder();
+        Long orderItemId = order.getOrderItems().get(0).getId();
+        em.flush();
+        em.clear();
+
+        System.out.println("---------------아래 코드 확인--------------");
+        OrderItem orderItem = orderItemRepository.findById(orderItemId).orElseThrow(EntityNotFoundException::new);
+        System.out.println("Order class : " + orderItem.getOrder().getClass());
+
     }
 }
