@@ -37,7 +37,8 @@ public class OrderTest {
     }
 
     @Test
-    @DisplayName("영속성 전이 테스트")
+    @DisplayName("영속성 전이 테스트1")
+    //Order 추가시 Order_item도 추가됨
     public void cascadeTest() {
 
         Order order = new Order();
@@ -61,5 +62,33 @@ public class OrderTest {
 
         Order savedOrder = orderRepository.findById(order.getId()).orElseThrow(EntityNotFoundException::new);
         assertThat(savedOrder.getOrderItems().size()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("영속성 전이 테스트2")
+    //Order 삭제시 Order_item도 삭제됨
+    public void cascadeTest2() {
+
+        Order order = new Order();
+        for (int i = 0; i < 3; i++) {
+            Item item = createItem();
+            itemRepository.save(item);
+
+            OrderItem orderItem = OrderItem.builder()
+                    .order_price(30000)
+                    .count(10)
+                    .item(item)
+                    .order(order)
+                    .build();
+            order.getOrderItems().add(orderItem);
+        }
+
+        System.out.println("--------------------flush--------------------");
+        orderRepository.saveAndFlush(order);
+        em.clear();
+
+        System.out.println("--------------------flush--------------------2");
+        orderRepository.deleteById(order.getId());
+        em.flush();
     }
 }
