@@ -27,10 +27,11 @@ class ItemRepositoryTest {
 
     public void createItem() {
         for (int i = 0; i < 11; i++) {
-            Item item = new Item();
-            item.setName("이름" + i);
-            item.setPrice(1000 + i);
-            item.setDetail("상세설명" + i);
+            Item item = Item.builder()
+                    .name("이름" + i)
+                    .price(1000 + i)
+                    .detail("상세설명" + i)
+                    .build();
             itemRepository.save(item);
         }
     }
@@ -71,17 +72,20 @@ class ItemRepositoryTest {
 
     public void createItem2() {
         for (int i = 0; i < 5; i++) {
-            Item item = new Item();
-            item.setName("이름" + i);
-            item.setPrice(10000 + i);
-            item.setDetail("가나다라" + i);
+            Item item = Item.builder()
+                    .name("이름" + i)
+                    .price(10000 + i)
+                    .detail("가나다라" + i)
+                    .build();
             itemRepository.save(item);
         }
+
         for (int i = 5; i < 10; i++) {
-            Item item = new Item();
-            item.setName("이름" + i);
-            item.setPrice(10000 + i);
-            item.setDetail("마바사" + i);
+            Item item = Item.builder()
+                    .name("이름" + i)
+                    .price(10000 + i)
+                    .detail("마바사" + i)
+                    .build();
             itemRepository.save(item);
         }
     }
@@ -105,7 +109,7 @@ class ItemRepositoryTest {
         System.out.println("getContent= " + itemPage.getContent());
 
         List<Item> resultItemList = itemPage.getContent();
-        for(Item item: resultItemList){
+        for (Item item : resultItemList) {
             System.out.println(item);
         }
 

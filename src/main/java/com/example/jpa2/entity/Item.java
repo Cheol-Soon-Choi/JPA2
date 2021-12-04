@@ -1,15 +1,16 @@
 package com.example.jpa2.entity;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @ToString
+@NoArgsConstructor
 public class Item {
 
     @Id
@@ -23,4 +24,10 @@ public class Item {
 
     private String detail;
 
+    @Builder
+    public Item(String name, int price, String detail) {
+        this.name = name;
+        this.detail = detail;
+        this.price = price;
+    }
 }

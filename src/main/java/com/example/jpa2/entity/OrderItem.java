@@ -1,8 +1,6 @@
 package com.example.jpa2.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -10,6 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class OrderItem {
 
     @Id
@@ -28,4 +27,12 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
+
+    @Builder
+    public OrderItem(int count, int order_price, Order order, Item item) {
+        this.count = count;
+        this.order_price = order_price;
+        this.order = order;
+        this.item = item;
+    }
 }

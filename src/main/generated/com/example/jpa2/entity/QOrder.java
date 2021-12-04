@@ -26,6 +26,8 @@ public class QOrder extends EntityPathBase<Order> {
 
     public final QMember member;
 
+    public final ListPath<OrderItem, QOrderItem> orderItems = this.<OrderItem, QOrderItem>createList("orderItems", OrderItem.class, QOrderItem.class, PathInits.DIRECT2);
+
     public QOrder(String variable) {
         this(Order.class, forVariable(variable), INITS);
     }

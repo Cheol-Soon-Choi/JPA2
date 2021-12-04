@@ -1,0 +1,65 @@
+package com.example.jpa2.entity;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@Transactional
+public class OrderTest {
+
+    @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @PersistenceContext
+    EntityManager em;
+
+    public Item createItem() {
+        return Item.builder()
+                .name("영속성")
+                .price(30000)
+                .detail("테스트")
+                .build();
+    }
+
+    @Test
+    @DisplayName("영속성 전이 테스트")
+    public void cascadeTest() {
+
+        Order order = new Order();
+
+        for (int i = 0; i < 3; i++) {
+            Item item = createItem();
+            itemRepository.save(item);
+
+            OrderItem orderItem = OrderItem.builder()
+                    .order_price(30000)
+                    .count(10)
+                    .item(item)
+                    .order(order)
+                    .build();
+            order.getOrderItems().add(orderItem);
+        }
+
+        System.out.println("--------------------flush--------------------");
+        orderRepository.saveAndFlush(order);
+        em.clear();
+
+        Order savedOrder = orderRepository.findById(order.getId()).orElseThrow(EntityNotFoundException::new);
+        assertThat(savedOrder.getOrderItems().size()).isEqualTo(3);
+    }
+}
