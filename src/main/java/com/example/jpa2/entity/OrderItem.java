@@ -22,8 +22,10 @@ public class OrderItem {
     private Integer order_price;
 
     @ManyToOne
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne
+    @JoinColumn(name = "item_id")
     private Item item;
 }
