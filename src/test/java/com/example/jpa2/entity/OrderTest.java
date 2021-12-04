@@ -91,4 +91,33 @@ public class OrderTest {
         orderRepository.deleteById(order.getId());
         em.flush();
     }
+
+    @Test
+    @DisplayName("고아 객체 제거 테스트")
+    //Order에서 Order_item 삭제
+    public void orphanRemovalTest() {
+
+        Order order = new Order();
+        for (int i = 0; i < 3; i++) {
+            Item item = createItem();
+            itemRepository.save(item);
+
+            OrderItem orderItem = OrderItem.builder()
+                    .order_price(30000)
+                    .count(10)
+                    .item(item)
+                    .order(order)
+                    .build();
+            order.getOrderItems().add(orderItem);
+        }
+
+        orderRepository.save(order);
+
+        System.out.println("----------------flush-------------------");
+        order.getOrderItems().remove(0);
+        em.flush();
+
+        Order savedOrder = orderRepository.findById(order.getId()).orElseThrow(EntityNotFoundException::new);
+        assertThat(savedOrder.getOrderItems().size()).isEqualTo(2);
+    }
 }
