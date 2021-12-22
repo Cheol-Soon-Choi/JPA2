@@ -46,8 +46,7 @@ class ItemRepositoryTest {
         List<Item> items = itemRepository.findByName("1");
 
         //then
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
+        for (Item item : items) {
             System.out.println(item.toString());
         }
     }
@@ -117,5 +116,16 @@ class ItemRepositoryTest {
 
         System.out.println("getTotalPages= " + itemPage.getTotalPages());
 
+    }
+
+    @Test
+    @DisplayName("Querydsl + JPA 확인")
+    public void QuerydslTest() {
+        createItem2();
+
+        List<Item> a = itemRepository.findTest("이름");
+        for (Item item : a) {
+            System.out.println(item);
+        }
     }
 }
